@@ -166,30 +166,29 @@ int main() {
         initialField(field);
         initialMe(mayform, field);
         initialEnemy(people,field);
-        printField(field);
     }
     else if(turn=="load"){
         loadGame(people, field, mayform);
-        printField(field);
     }
     while (mayform.health > 0 && (people[0].health > 0 || people[1].health > 0 ||
             people[2].health>0 ||people[3].health>0 ||people[4].health>0)){
+        printField(field);
         std::cout<<"Your turn : ";
         std::cin>>turn;
         if(turn=="save"){
             saveGame(people, field, mayform);
             return 0;
         }
-        else if(turn=="l"){
+        else if(turn=="left"){
             step(mayform.x, mayform.y, mayform.x - 1, mayform.y, people, mayform, field,0);
         }
-        else if(turn=="r"){
+        else if(turn=="right"){
             step(mayform.x, mayform.y, mayform.x + 1, mayform.y, people, mayform, field,0);
         }
-        else if(turn=="t"){
+        else if(turn=="top"){
             step(mayform.x, mayform.y, mayform.x, mayform.y + 1, people, mayform, field,0);
         }
-        else if(turn=="b"){
+        else if(turn=="bottom"){
             step(mayform.x, mayform.y, mayform.x, mayform.y - 1, people, mayform, field,0);
         }
         else continue;
@@ -203,7 +202,6 @@ int main() {
                 else if(n==3)step(people[i].x, people[i].y, people[i].x,people[i].y-1, people, mayform, field,i);
             }
         }
-        printField(field);
     }
     if(mayform.health<=0){
         std::cout<<"The enemy has won!";
