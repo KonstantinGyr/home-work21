@@ -1,0 +1,3 @@
+C:/Users/Kot/CLionProjects/HW21/step_play/cmake-build-debug/CMakeFiles/step_play.dir
+C:/Users/Kot/CLionProjects/HW21/step_play/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Kot/CLionProjects/HW21/step_play/cmake-build-debug/CMakeFiles/rebuild_cache.dir
