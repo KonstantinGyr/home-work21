@@ -1,72 +1,84 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 struct Villege{
     std::string name;
-    float areaHouse;
-    float areaGarage=0;
-    float areaBathhouse=0;
-    bool pipeHouse;
-    bool pipeBath;
-    int floors;
-    struct House{
-        std::string num;
-        float height;
-        float hall=0;
-        float bedroom=0;
-        float bathroom=0;
-        float kitchen=0;
-        float playroom=0;
+    float areaPiece;
+    int quantBuild;
+    struct Building{
+        std::string purpose;
+        float areaBuild;
+        bool stoveWithPipe;
+        int quantFloors;
+        struct Floor{
+            int numFloor;
+            float height;
+            int quantRoom;
+            struct Room{
+                std::string name;
+                float area;
+            };
+        };
     };
 };
 int main() {
-    int n=0;
-    int floors=0;
+    int n=1;
     std::cout << "Enter number of plots in the village" << std::endl;
     std::cin>>n;
-    Villege piece[100] ;
-    Villege::House floor[10];
+    std::vector<Villege> piece ;
+    Villege numPiece;
+    std::vector<Villege::Building> type;
+    Villege::Building building;
+    std::vector<Villege::Building::Floor>floors;
+    Villege::Building::Floor floor;
+    std::vector<Villege::Building::Floor::Room>use;
+    Villege::Building::Floor::Room room;
     std::string pipe;
     for(int i=1;i<=n;i++){
-        piece[i].name="Plot number"+ (std::to_string(i));
+        numPiece.name="Plot number"+ (std::to_string(i));
         std::cout<<"Plot number "<<i<<std::endl;
-        std::cout<<"Enter house area : ";
-        std::cin>>piece[i].areaHouse;
-        std::cout<<"Enter garage area,if any : ";
-        std::cin>>piece[i].areaGarage;
-        std::cout<<"Enter bathhouse area,if any : ";
-        std::cin>>piece[i].areaBathhouse;
-        std::cout<<"In the house a stove with a pipe?";
-        std::cin>>pipe;
-        if(pipe=="yes")piece[i].pipeHouse= true;
-        else if(pipe=="no")piece[i].pipeHouse= false;
-        std::cout<<"In the bath a stove with a pipe?";
-        std::cin>>pipe;
-        if(pipe=="yes")piece[i].pipeBath= true;
-        else if(pipe=="no")piece[i].pipeBath= false;
-        std::cout<<"How many floors in the house ?";
-        std::cin>>floors;
-        for(int j=1;j<=floors;j++){
-            floor[j].num="Floor number "+std::to_string(j);
-            std::cout<<floor[j].num<<std::endl;
-            std::cout<<"Enter height floor :";
-            std::cin>>floor[j].height;
-            std::cout<<"Enter hall area,if any :";
-            std::cin>>floor[j].hall;
-            std::cout<<"Enter bedroom area,if any :";
-            std::cin>>floor[j].bedroom;
-            std::cout<<"Enter bathroom area,if any :";
-            std::cin>>floor[j].bathroom;
-            std::cout<<"Enter kitchen area,if any :";
-            std::cin>>floor[j].kitchen;
-            std::cout<<"Enter playroom area,if any :";
-            std::cin>>floor[j].playroom;
+        std::cout<<"Enter plot area : ";
+        std::cin>>numPiece.areaPiece;
+        std::cout<<"Enter quantity building on a plot: ";
+        std::cin>>numPiece.quantBuild;
+        for(int j=1;j<=numPiece.quantBuild;j++){
+            std::cout<<"Building # "<<j<<std::endl;
+            std::cout<<"Enter type building: ";
+            std::cin>>building.purpose;
+            std::cout<<"Enter building area : ";
+            std::cin>>building.areaBuild;
+            std::cout<<"Do you have a stove with a pipe?";
+            std::cin>>pipe;
+            if(pipe=="yes")building.stoveWithPipe= true;
+            else if(pipe=="no")building.stoveWithPipe= false;
+            std::cout<<"How many floors in the house ?";
+            std::cin>>building.quantFloors;
+            for(int k=1;k<=building.quantFloors;k++) {
+                floor.numFloor = k;
+                std::cout<<"Floor # "<<k<<std::endl;
+                std::cout << "Enter height floor :";
+                std::cin >> floor.height;
+                std::cout << "How many rooms on a floor? ";
+                std::cin >> floor.quantRoom;
+                for (int a = 1; a <= floor.quantRoom; a++) {
+                    std::cout<<"Room # "<<a<<std::endl;
+                    std::cout << "What is the purpose of the room? ";
+                    std::cin >> room.name;
+                    std::cout << "How many area this room? ";
+                    std::cin >> room.area;
+                    use.push_back(room);
+                }
+              floors.push_back(floor);
+            }
+           type.push_back(building);
         }
+       piece.push_back(numPiece);
     }
     std::cout<<"Total building area ";
     float sum=0;
-    for(int i=1;i<=n;i++){
-        sum+=(piece[i].areaHouse+piece[i].areaGarage+piece[i].areaBathhouse);
+    for(int j=0;j<type.size();j++) {
+        sum += type[j].areaBuild;
     }
     std::cout<<sum;
     return 0;
