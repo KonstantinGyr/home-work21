@@ -51,7 +51,12 @@ void write_list(document &person,std::vector<document> &people){
     list.open("doc2.txt",std::ios::app);
     for(int i=0;i<people.size();i++){
         list<<people[i].firstName<<" "<<people[i].secondName<<" ";
-        list<<people[i].data<<" "<<people[i].salary<<std::endl;
+        list<<people[i].data<<" ";
+        if(i==people.size()-1){
+            list<<people[i].salary;
+        } else{
+            list<<people[i].salary<<std::endl;
+        }
     }
     list.close();
 }
@@ -61,9 +66,7 @@ void list(document &person,std::vector<document>& people){
     doc.seekg(0);
     std::string name;
     while(!doc.eof()){
-        doc>>name;
-        if(name==person.firstName)continue;
-        person.firstName=name;
+        doc>>person.firstName;
         doc>>person.secondName;
         doc>>person.data;
         doc>>person.salary;

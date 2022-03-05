@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <cstdio>
 
 struct Iam{
     std::string name ;
@@ -12,7 +13,7 @@ struct Iam{
     int y;
 };
 struct Soldier{
-    std::string name;
+    int name;
     int health;
     int armor;
     int damage;
@@ -26,7 +27,6 @@ void initialField(char(&field)[20][20]){
         }
     }
 }
-
 void printField(char(&field)[20][20]){
     for(int i=19;i>=0;i--){
         for(int j=0;j<20;j++){
@@ -44,7 +44,7 @@ void printField(char(&field)[20][20]){
 }
 void initialEnemy(Soldier (&people)[5],char (&field)[20][20]){
     for(int i=0;i<5;i++){
-        people[i].name="Enemy # "+ std::to_string(i+1);
+        people[i].name= i+1;    // /"Enemy # "+ std::to_string(i+1);
         people[i].armor=(std::rand()%51);
         people[i].health=(std::rand()%101)+50;
         people[i].damage=(std::rand()%16)+15;
@@ -79,10 +79,17 @@ void saveGame(Soldier (&people)[5],char (&field)[20][20],Iam &mayform){
     }
     enemyf.close();
     std::ofstream mayf("mayfile.bin",std::ios::binary);
-    mayf.write((char*)&mayform, sizeof(Iam));
+    int len=mayform.name.length();
+    mayf.write((char*)&len,sizeof(len));
+    mayf.write((char*)&mayform.name,len);
+    mayf.write((char*)&mayform.health, sizeof(int));
+    mayf.write((char*)&mayform.armor, sizeof(int));
+    mayf.write((char*)&mayform.damage, sizeof(int));
+    mayf.write((char*)&mayform.x, sizeof(int));
+    mayf.write((char*)&mayform.y, sizeof(int));
     mayf.close();
     std::ofstream fieldf("fieldfile.bin",std::ios::binary);
-    fieldf.write((char*)&field,sizeof(field));
+    fieldf.write((char*)&field,400);
     fieldf.close();
 }
 void loadGame(Soldier (&people)[5],char (&field)[20][20],Iam &mayform){
@@ -92,10 +99,17 @@ void loadGame(Soldier (&people)[5],char (&field)[20][20],Iam &mayform){
     }
     enemyf.close();
     std::ifstream mayf("mayfile.bin",std::ios::binary);
-    mayf.read((char*)&mayform, sizeof(Iam));
+    int len;
+    mayf.read((char*)&len, sizeof(len));
+    mayf.read((char*)mayform.name.c_str(),len);
+    mayf.read((char*)&mayform.health, sizeof(int));
+    mayf.read((char*)&mayform.armor, sizeof(int));
+    mayf.read((char*)&mayform.damage, sizeof(int));
+    mayf.read((char*)&mayform.x, sizeof(int));
+    mayf.read((char*)&mayform.y, sizeof(int));
     mayf.close();
     std::ifstream fieldf("fieldfile.bin",std::ios::binary);
-    fieldf.read((char*)&field,sizeof(field));
+    fieldf.read((char*)&field,400);
     fieldf.close();
 }
 bool fieldOk(int x,int y){
@@ -108,15 +122,15 @@ void battleWithE( int n, Soldier (&people)[5], Iam &mayform, char (&field)[20][2
         people[n].health += people[n].armor;
         people[n].armor = 0;
     }
-    std::cout<<people[n].name<<" have health: "<<people[n].health<<std::endl;
+    std::cout<<"Enemy # "<<people[n].name<<" have health: "<<people[n].health<<std::endl;
     if(people[n].health<=0){
-        std::cout<<people[n].name<<" is death"<<std::endl;
+        std::cout<<"Enemy # "<<people[n].name<<" is death"<<std::endl;
         field[mayform.x][mayform.y]=' ';
         mayform.x=people[n].x;
         mayform.y=people[n].y;
         field[mayform.x][mayform.y]='P';
-        people[n].x=-1;
-        people[n].y=-1;
+        people[n].x=40+n;
+        people[n].y=40+n;
     }
 }
 void attack(int x, int y, int n, Soldier (&people)[5], Iam &mayform, char (&field)[20][20]){
@@ -141,7 +155,7 @@ void step(int x, int y, int x1, int y1, Soldier (&people)[5], Iam &mayform, char
                 people[num].y = y1;
         }
         else if (field[x1][y1] == 'E' && field[x][y] == 'P') {
-                int n;
+                int n = 0;
                 for (int i = 0; i < 5; i++) {
                     if (people[i].x == x1 && people[i].y == y1) {
                         n = i;
@@ -179,16 +193,16 @@ int main() {
             saveGame(people, field, mayform);
             return 0;
         }
-        else if(turn=="left"){
+        else if(turn=="4"){
             step(mayform.x, mayform.y, mayform.x - 1, mayform.y, people, mayform, field,0);
         }
-        else if(turn=="right"){
+        else if(turn=="6"){
             step(mayform.x, mayform.y, mayform.x + 1, mayform.y, people, mayform, field,0);
         }
-        else if(turn=="top"){
+        else if(turn=="8"){
             step(mayform.x, mayform.y, mayform.x, mayform.y + 1, people, mayform, field,0);
         }
-        else if(turn=="bottom"){
+        else if(turn=="2"){
             step(mayform.x, mayform.y, mayform.x, mayform.y - 1, people, mayform, field,0);
         }
         else continue;
