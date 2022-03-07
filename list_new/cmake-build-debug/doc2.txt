@@ -2,3 +2,4 @@ ivan ivanov 12.12.2020 50000
 pit petrov 11.11.2021 47000
 ian gillan 11.06.2015 576000
 ian paice 01.04.2020 546000
+jimmy hendrix 20.06.2020 657000
