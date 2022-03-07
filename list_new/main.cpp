@@ -66,11 +66,14 @@ void list(document &person,std::vector<document>& people){
     doc.seekg(0);
     std::string name;
     while(!doc.eof()){
-        doc>>person.firstName;
-        doc>>person.secondName;
-        doc>>person.data;
-        doc>>person.salary;
-        people.push_back(person);
+            doc >>name;
+            if(name.empty())break;
+            person.firstName=name;
+            name.clear();
+            doc >> person.secondName;
+            doc >> person.data;
+            doc >> person.salary;
+            people.push_back(person);
     }
     doc.close();
 }

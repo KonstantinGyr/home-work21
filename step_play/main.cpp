@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
-#include <cstdio>
 
 struct Iam{
     std::string name ;
@@ -81,7 +80,7 @@ void saveGame(Soldier (&people)[5],char (&field)[20][20],Iam &mayform){
     std::ofstream mayf("mayfile.bin",std::ios::binary);
     int len=mayform.name.length();
     mayf.write((char*)&len,sizeof(len));
-    mayf.write((char*)&mayform.name,len);
+    mayf.write(mayform.name.c_str(),len);
     mayf.write((char*)&mayform.health, sizeof(int));
     mayf.write((char*)&mayform.armor, sizeof(int));
     mayf.write((char*)&mayform.damage, sizeof(int));
@@ -101,6 +100,7 @@ void loadGame(Soldier (&people)[5],char (&field)[20][20],Iam &mayform){
     std::ifstream mayf("mayfile.bin",std::ios::binary);
     int len;
     mayf.read((char*)&len, sizeof(len));
+    mayform.name.resize(len);
     mayf.read((char*)mayform.name.c_str(),len);
     mayf.read((char*)&mayform.health, sizeof(int));
     mayf.read((char*)&mayform.armor, sizeof(int));
@@ -187,7 +187,7 @@ int main() {
     while (mayform.health > 0 && (people[0].health > 0 || people[1].health > 0 ||
             people[2].health>0 ||people[3].health>0 ||people[4].health>0)){
         printField(field);
-        std::cout<<"Your turn : ";
+        std::cout<<mayform.name<<", your turn : ";
         std::cin>>turn;
         if(turn=="save"){
             saveGame(people, field, mayform);
